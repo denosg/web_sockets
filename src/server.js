@@ -24,9 +24,18 @@ io.on('connection', (socket) => {
     console.log(`New WebSocket connection`);
 
     socket.emit('message', message)
+    socket.broadcast.emit('message', 'A new user has joined !') //send to everyone, but that connection
 
     socket.on('sendMessage', (message) => {
         io.emit('message', message)
+    })
+
+    socket.on('sendLocation', (coords) => {
+        io.emit('message', `https://www.google.com/maps?q=${coords.latitude},${coords.longitude}`)
+    })
+
+    socket.on('disconnect', () => {
+        io.emit('message', "A user has left")
     })
 
     // socket.emit('countUpdated', count)
@@ -35,7 +44,7 @@ io.on('connection', (socket) => {
     //     // socket.emit('countUpdated', count) // for one person
     //     io.emit('countUpdated', count) // for everyone
     // })
-  });
+});
 
 server.listen(port, () => {
     console.log(`Server is up on port ${port}`)
