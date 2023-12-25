@@ -1,5 +1,8 @@
 const socket = io()
 
+// server (emit) -> client (receive) --acknowledgememnt --> server
+// client (emit) -> server (receive) --acknowledgememnt --> client
+
 socket.on('message', (message) => {
     console.log(message);
 })
@@ -7,7 +10,12 @@ socket.on('message', (message) => {
 function sendMessage() {
     const message = messageInput.value;
     if (message.trim() !== '') {
-        socket.emit('sendMessage', message)
+        socket.emit('sendMessage', message, (error) => {
+            if(error){
+                return console.log(error);
+            }
+            console.log(`The message was delivered.`);
+        })
         messageInput.value = '';
     }
 }
@@ -29,6 +37,8 @@ function sendPosition(position) {
     socket.emit('sendLocation', {
         latitude: position.coords.latitude,
         longitude: position.coords.longitude
+    }, () => {
+        console.log('Location shared !');
     })
 }
 
