@@ -14,9 +14,14 @@ const messages = document.getElementById("messages")
 const messageTemplate = document.getElementById("message-template").innerHTML
 const locationLinkTemplate = document.getElementById("location-template").innerHTML
 
+function formatDate(date) {
+    return moment(date).format('h:mm a')
+}
+
 function insertMessage(message) {
     const html = Mustache.render(messageTemplate, {
-        message
+        messageText: message.text,
+        createdAt: formatDate(message.createdAt)
     })
     messages.insertAdjacentHTML('beforeend', html)
 }

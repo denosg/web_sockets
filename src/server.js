@@ -4,6 +4,7 @@ const http = require('http')
 const appRoute = require('./routers/app_router')
 const socketio = require('socket.io')
 const Filter = require('bad-words')
+const { generateMessage } = require('./utils/messages')
 
 const app = express()
 const server = http.createServer(app)
@@ -24,7 +25,7 @@ const message = "welcome!"
 io.on('connection', (socket) => {
     console.log(`New WebSocket connection`);
 
-    socket.emit('message', message)
+    socket.emit('message', generateMessage(message))
     socket.broadcast.emit('message', 'A new user has joined !') //send to everyone, but that connection
 
     socket.on('sendMessage', (message, callback) => {
@@ -34,7 +35,7 @@ io.on('connection', (socket) => {
             return callback('Profanity is not allowed')
         }
 
-        io.emit('message', message)
+        io.emit('message', generateMessage(message))
         callback()
     })
 
@@ -44,7 +45,7 @@ io.on('connection', (socket) => {
     })
 
     socket.on('disconnect', () => {
-        io.emit('message', "A user has left")
+        io.emit('message', generateMessage("A user has left"))
     })
 
     // socket.emit('countUpdated', count)
