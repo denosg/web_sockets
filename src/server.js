@@ -30,7 +30,7 @@ io.on('connection', (socket) => {
     socket.on('sendMessage', (message, callback) => {
         const filter = new Filter()
 
-        if(filter.isProfane(message)){
+        if (filter.isProfane(message)) {
             return callback('Profanity is not allowed')
         }
 
@@ -39,7 +39,7 @@ io.on('connection', (socket) => {
     })
 
     socket.on('sendLocation', (coords, callback) => {
-        io.emit('message', `https://www.google.com/maps?q=${coords.latitude},${coords.longitude}`)
+        io.emit('locationMessage', `https://www.google.com/maps?q=${coords.latitude},${coords.longitude}`)
         callback()
     })
 

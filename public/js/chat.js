@@ -12,13 +12,30 @@ const messages = document.getElementById("messages")
 
 // Templates
 const messageTemplate = document.getElementById("message-template").innerHTML
+const locationLinkTemplate = document.getElementById("location-template").innerHTML
 
-socket.on('message', (message) => {
-    console.log(message);
+function insertMessage(message) {
     const html = Mustache.render(messageTemplate, {
         message
     })
     messages.insertAdjacentHTML('beforeend', html)
+}
+
+function insertLocationLink(link) {
+    const html = Mustache.render(locationLinkTemplate, {
+        link
+    })
+    messages.insertAdjacentHTML('beforeend', html)
+}
+
+socket.on('message', (message) => {
+    console.log(message);
+    insertMessage(message)
+})
+
+socket.on('locationMessage', (locMessage) => {
+    console.log(locMessage);
+    insertLocationLink(locMessage)
 })
 
 function disableButton(button) {
