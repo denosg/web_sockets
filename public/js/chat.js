@@ -26,9 +26,10 @@ function insertMessage(message) {
     messages.insertAdjacentHTML('beforeend', html)
 }
 
-function insertLocationLink(link) {
+function insertLocationLink(linkOjb) {
     const html = Mustache.render(locationLinkTemplate, {
-        link
+        link: linkOjb.url,
+        createdAt: formatDate(linkOjb.createdAt)
     })
     messages.insertAdjacentHTML('beforeend', html)
 }
