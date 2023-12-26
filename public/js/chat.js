@@ -14,6 +14,11 @@ const messages = document.getElementById("messages")
 const messageTemplate = document.getElementById("message-template").innerHTML
 const locationLinkTemplate = document.getElementById("location-template").innerHTML
 
+// Options
+const { username, room } = Qs.parse(location.search, {
+    ignoreQueryPrefix: true
+})
+
 function formatDate(date) {
     return moment(date).format('h:mm a')
 }
@@ -93,6 +98,11 @@ sendLocationButton.addEventListener('click', () => {
     navigator.geolocation.getCurrentPosition((position) => {
         sendPosition(position)
     })
+})
+
+socket.emit('join', {
+    username,
+    room
 })
 
 // socket.on('countUpdated', (count) => {
