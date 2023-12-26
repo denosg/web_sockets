@@ -2,35 +2,50 @@
 <html>
 
 <head>
-    <h1>Chat app</h1>
+    <title>Chat App</title>
+    <link rel="icon" href="./img/favicon.png">
+    <link rel="stylesheet" href="./css/styles.min.css">
 </head>
 
 <body>
-    <div id="messages"></div>
+    <div class="chat">
+        <div class="chat__sidebar"></div>
+        <div class="chat__main">
+            <div id="messages" class="chat__messages"></div>
 
-    <div>
-        <form id="chatForm">
-            <input type="text" id="messageInput" placeholder="Type your message...">
-            <button type="button" id="sendMessage">Send</button>
-        </form>
+            <div class="compose">
+                <div>
+                    <form id="chatForm">
+                        <input type="text" id="messageInput" placeholder="Type your message...">
+                        <button type="button" id="sendMessage">Send</button>
+                    </form>
+                </div>
+
+                <div>
+                    <button id="sendLocation">Send location</button>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div>
-        <button id="sendLocation">Send location</button>
-    </div>
     <script id="message-template" type="text/html">
-        <div>
-            <p>{{createdAt}}: {{messageText}}</p>
+        <div class="message">
+            <p>
+                <span class="message__name">Username</span>
+                <span class="message__meta">{{createdAt}}: </span>
+            </p>
+            <p>{{messageText}}</p>
         </div>
     </script>
     <script id="location-template" type="text/html">
-        <div>
-          <p>{{createdAt}}: 
-            <a href="{{link}}" target="_blank">My current location</a></p> 
+        <div class="message">
+            <p>
+                <span class="message__name">Username</span>
+                <span class="message__meta">{{createdAt}}: </span>
+            </p>
+            <a href="{{link}}" target="_blank">My current location</a>
         </div>
       </script>
-
-
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.1/mustache.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
