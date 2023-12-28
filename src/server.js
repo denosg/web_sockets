@@ -50,9 +50,9 @@ io.on('connection', (socket) => {
         const filter = new Filter()
         const user = getUser(socket.id)
 
-        if (filter.isProfane(message)) {
-            return callback('Profanity is not allowed')
-        }
+        // if (filter.isProfane(message)) {
+        //     return callback('Profanity is not allowed')
+        // }
 
         io.to(user.room).emit('message', generateMessage(user.username, message))
         callback()
