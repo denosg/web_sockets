@@ -103,6 +103,11 @@ sendLocationButton.addEventListener('click', () => {
 socket.emit('join', {
     username,
     room
+}, (error) => {
+    if(error){
+        location.href = '/'
+        alert(error)
+    }
 })
 
 // socket.on('countUpdated', (count) => {
