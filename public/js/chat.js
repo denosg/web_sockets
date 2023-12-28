@@ -4,12 +4,12 @@ const socket = io()
 // client (emit) -> server (receive) --acknowledgememnt --> client
 
 // Elements
-const chatForm = document.getElementById('chatForm');
-const messageInput = document.getElementById('messageInput');
-const sendMessageButton = document.getElementById('sendMessage');
-const sendLocationButton = document.getElementById('sendLocation')
-const messages = document.getElementById("messages")
-const sidebar = document.getElementById("sidebar")
+const $chatForm = document.getElementById('chatForm');
+const $messageInput = document.getElementById('messageInput');
+const $sendMessageButton = document.getElementById('sendMessage');
+const $sendLocationButton = document.getElementById('sendLocation')
+const $messages = document.getElementById("messages")
+const $sidebar = document.getElementById("sidebar")
 
 // Templates
 const messageTemplate = document.getElementById("message-template").innerHTML
@@ -31,7 +31,7 @@ function insertMessage(message) {
         messageText: message.text,
         createdAt: formatDate(message.createdAt)
     })
-    messages.insertAdjacentHTML('beforeend', html)
+    $messages.insertAdjacentHTML('beforeend', html)
 }
 
 function insertLocationLink(linkOjb) {
@@ -40,7 +40,7 @@ function insertLocationLink(linkOjb) {
         link: linkOjb.url,
         createdAt: formatDate(linkOjb.createdAt)
     })
-    messages.insertAdjacentHTML('beforeend', html)
+    $messages.insertAdjacentHTML('beforeend', html)
 }
 
 function inserRoomAndList(room, userList) {
@@ -48,17 +48,42 @@ function inserRoomAndList(room, userList) {
         userList,
         room
     })
-    sidebar.innerHTML = html
+    $sidebar.innerHTML = html
+}
+
+function autoScroll() {
+    // New message element
+    const $newMessage = $messages.lastElementChild
+
+    // Height of the new message
+    const newMessagesStyles = getComputedStyle($newMessage)
+    const newMessageMargin = parseInt(newMessagesStyles.marginBottom)
+    const newMessageHeight = $newMessage.clientHeight + newMessageMargin
+
+    // Visible height
+    const visibleHeight = $messages.offsetHeight
+
+    // Height of messages container
+    const containerHeight = $messages.scrollHeight
+
+    // How far have i scrolled
+    const scrollOffset = $messages.scrollTop + visibleHeight
+
+    if(containerHeight - newMessageHeight <= scrollOffset) {
+        $messages.scrollTop = $messages.scrollHeight
+    }
 }
 
 socket.on('message', (message) => {
     console.log(message);
     insertMessage(message)
+    autoScroll()
 })
 
 socket.on('locationMessage', (locMessage) => {
     console.log(locMessage);
     insertLocationLink(locMessage)
+    autoScroll()
 })
 
 socket.on('roomData', ({ room, userList }) => {
@@ -76,7 +101,7 @@ function enableButton(button) {
 }
 
 function sendMessage() {
-    const message = messageInput.value;
+    const message = $messageInput.value;
     if (message.trim() !== '') {
         socket.emit('sendMessage', message, (error) => {
             if (error) {
@@ -84,16 +109,16 @@ function sendMessage() {
             }
             console.log(`The message was delivered.`);
         })
-        messageInput.value = '';
+        $messageInput.value = '';
     }
 }
 
-chatForm.addEventListener('submit', function (event) {
+$chatForm.addEventListener('submit', function (event) {
     event.preventDefault();
     sendMessage()
 });
 
-sendMessageButton.addEventListener('click', function () {
+$sendMessageButton.addEventListener('click', function () {
     sendMessage()
 });
 
@@ -104,14 +129,14 @@ function sendPosition(position) {
     }, () => {
         console.log('Location shared !');
     })
-    enableButton(sendLocationButton)
+    enableButton($sendLocationButton)
 }
 
-sendLocationButton.addEventListener('click', () => {
+$sendLocationButton.addEventListener('click', () => {
     if (!navigator.geolocation) {
         return alert('Geolocation is not suported by your browser.')
     }
-    disableButton(sendLocationButton)
+    disableButton($sendLocationButton)
 
     navigator.geolocation.getCurrentPosition((position) => {
         sendPosition(position)
