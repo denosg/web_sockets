@@ -25,6 +25,7 @@ function formatDate(date) {
 
 function insertMessage(message) {
     const html = Mustache.render(messageTemplate, {
+        username: message.username,
         messageText: message.text,
         createdAt: formatDate(message.createdAt)
     })
@@ -33,6 +34,7 @@ function insertMessage(message) {
 
 function insertLocationLink(linkOjb) {
     const html = Mustache.render(locationLinkTemplate, {
+        username: linkOjb.username,
         link: linkOjb.url,
         createdAt: formatDate(linkOjb.createdAt)
     })
@@ -104,7 +106,7 @@ socket.emit('join', {
     username,
     room
 }, (error) => {
-    if(error){
+    if (error) {
         location.href = '/'
         alert(error)
     }
