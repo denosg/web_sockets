@@ -9,10 +9,12 @@ const messageInput = document.getElementById('messageInput');
 const sendMessageButton = document.getElementById('sendMessage');
 const sendLocationButton = document.getElementById('sendLocation')
 const messages = document.getElementById("messages")
+const sidebar = document.getElementById("sidebar")
 
 // Templates
 const messageTemplate = document.getElementById("message-template").innerHTML
 const locationLinkTemplate = document.getElementById("location-template").innerHTML
+const sidebarTemplate = document.getElementById("sidebar-template").innerHTML
 
 // Options
 const { username, room } = Qs.parse(location.search, {
@@ -41,6 +43,14 @@ function insertLocationLink(linkOjb) {
     messages.insertAdjacentHTML('beforeend', html)
 }
 
+function inserRoomAndList(room, userList) {
+    const html = Mustache.render(sidebarTemplate, {
+        userList,
+        room
+    })
+    sidebar.innerHTML = html
+}
+
 socket.on('message', (message) => {
     console.log(message);
     insertMessage(message)
@@ -49,6 +59,12 @@ socket.on('message', (message) => {
 socket.on('locationMessage', (locMessage) => {
     console.log(locMessage);
     insertLocationLink(locMessage)
+})
+
+socket.on('roomData', ({ room, userList }) => {
+    console.log(`room: ${room}`);
+    console.log(`userList: ${userList}`);
+    inserRoomAndList(room, userList)
 })
 
 function disableButton(button) {

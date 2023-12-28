@@ -40,6 +40,9 @@ io.on('connection', (socket) => {
         socket.emit('message', generateMessage('Admin', message))
         socket.broadcast.to(user.room).emit('message', generateMessage('Admin', `${user.username} has joined!`)) //send to everyone, but that connection
 
+        const userList = getUsersInRoom(user.room)
+        io.to(user.room).emit('roomData', { userList, room: user.room })
+
         callback()
     })
 
@@ -67,6 +70,12 @@ io.on('connection', (socket) => {
 
         if (user) {
             io.to(user.room).emit('message', generateMessage('Admin', `${user.username} has left!`))
+
+            const userList = getUsersInRoom(user.room)
+            io.to(user.room).emit('roomData', {
+                userList,
+                room: user.room
+            })
         }
     })
 
